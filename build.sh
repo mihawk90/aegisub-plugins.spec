@@ -29,10 +29,10 @@ set -x
 rm ./f_downloads/*.tar.gz
 spectool -g $spec --directory ./f_downloads
 rm -rf ./f_upload/$frel/
-mock -r fedora-$frel-x86_64-rpmfusion_free --sources=./f_downloads --spec=$spec --resultdir=./f_upload/$frel/ --rootdir=/home/tarulia/Development/aegisub/aegisub-plugin-dependency-control.spec/mock_root --no-cleanup-after
+mock -r fedora+rpmfusion_nonfree-$frel-x86_64 --sources=./f_downloads --spec=$spec --resultdir=./f_upload/$frel/ --rootdir=/home/tarulia/Development/aegisub/aegisub-plugin-dependency-control.spec/mock_root --no-cleanup-after
 
 pushd ./f_upload/$frel && \
-sha512sum aegisub-plugin-dependency-control-$mver-$rver.fc$frel.x86_64.rpm > aegisub-plugin-dependency-control-$mver-$rver.fc$frel.sha512 && \
+#sha512sum aegisub-plugin-dependency-control-$mver-$rver.fc$frel.x86_64.rpm > aegisub-plugin-dependency-control-$mver-$rver.fc$frel.sha512 && \
 \
 if [ "$1" == "install" ]; then
 	sudo dnf install aegisub-plugin-dependency-control-$mver-$rver.fc$frel.x86_64.rpm
