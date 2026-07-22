@@ -1,12 +1,12 @@
 # spec file adapted from AUR PKGBUILD
 # https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=aegisub-dependency-control
 
-%global date   20260722
-%global commit fd418320cf280d23a318447ae5fe4676673b8ef7
+%global date   20260722.2
+%global commit f116ef3ad253b610d02c670b977bae8c30589756
 
 Name:           aegisub-plugin-dependency-control-pre
 Version:        0.6.4^%{date}.%(c=%{commit}; echo ${c:0:7})
-Release:        3%{?dist}
+Release:        1%{?dist}
 Summary:        Aegisub Script Manager
 # vendored dkjson.lua also under MIT, see file header
 #     modules/l0/dkjson/vendor/dkjson.lua
@@ -62,6 +62,9 @@ chmod -x,u=rwX,g=rX,o=rX -R "%{aegiauto}/autoload"
 
 
 %changelog
+* Wed Jul 22 2026 Tarulia <mihawk.90+git@googlemail.com> - 0.6.4^20260722.2.f116ef3-4
+- New version
+
 * Wed Jul 22 2026 Tarulia <mihawk.90+git@googlemail.com> - 0.6.4^20260722.fd41832-3
 - REVERT ME: Use distinct package name
 
