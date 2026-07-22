@@ -6,7 +6,7 @@
 
 Name:           aegisub-plugin-dependency-control
 Version:        0.6.4^%{date}.%(c=%{commit}; echo ${c:0:7})
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Aegisub Script Manager
 # vendored dkjson.lua also under MIT, see file header
 #     modules/l0/dkjson/vendor/dkjson.lua
@@ -19,8 +19,8 @@ BuildArch:      noarch
 
 Requires:       aegisub
 # requires unversioned SO at runtime
-Requires:       libcurl-devel
-# /modules/l0/DependencyControl/hash.moon#L114
+Requires:       libcurl
+# modules/l0/DependencyControl/hash.moon#L114
 Requires:       libcrypto.so.3
 
 
@@ -62,6 +62,9 @@ chmod -x,u=rwX,g=rX,o=rX -R "%{aegiauto}/autoload"
 
 
 %changelog
+* Wed Jul 22 2026 Tarulia <mihawk.90+git@googlemail.com> - 0.6.4^20260722.fd41832-2
+- Swap `libcurl-devel` for `libcurl`
+
 * Wed Jul 22 2026 Tarulia <mihawk.90+git@googlemail.com> - 0.6.4^20260722.fd41832-1
 - drop now-unused ISC license
 - remove `ffi-experiments` and `luajson` per upstream requirements
