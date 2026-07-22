@@ -4,9 +4,9 @@
 %global date   20260722
 %global commit fd418320cf280d23a318447ae5fe4676673b8ef7
 
-Name:           aegisub-plugin-dependency-control
+Name:           aegisub-plugin-dependency-control-pre
 Version:        0.6.4^%{date}.%(c=%{commit}; echo ${c:0:7})
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Aegisub Script Manager
 # vendored dkjson.lua also under MIT, see file header
 #     modules/l0/dkjson/vendor/dkjson.lua
@@ -62,6 +62,9 @@ chmod -x,u=rwX,g=rX,o=rX -R "%{aegiauto}/autoload"
 
 
 %changelog
+* Wed Jul 22 2026 Tarulia <mihawk.90+git@googlemail.com> - 0.6.4^20260722.fd41832-3
+- REVERT ME: Use distinct package name
+
 * Wed Jul 22 2026 Tarulia <mihawk.90+git@googlemail.com> - 0.6.4^20260722.fd41832-2
 - Swap `libcurl-devel` for `libcurl`
 
