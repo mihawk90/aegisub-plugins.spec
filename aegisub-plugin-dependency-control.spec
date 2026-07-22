@@ -1,83 +1,77 @@
 # spec file adapted from AUR PKGBUILD
 # https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=aegisub-dependency-control
 
-# disable this because honestly I can't be bothered
-%global debug_package %{nil} 
-
-%global ffiexpver b8897ead55b84ec4148e900882bff8336b38f939
-%global luajsonver 1.3.3
+%global date   20260722
+%global commit fd418320cf280d23a318447ae5fe4676673b8ef7
 
 Name:           aegisub-plugin-dependency-control
-Version:        0.6.4~alpha
-Release:        2%{?dist}
+Version:        0.6.4^%{date}.%(c=%{commit}; echo ${c:0:7})
+Release:        1%{?dist}
 Summary:        Aegisub Script Manager
-License:        'MIT' 'ISC'
+# vendored dkjson.lua also under MIT, see file header
+#     modules/l0/dkjson/vendor/dkjson.lua
+License:        'MIT'
 URL:            https://github.com/TypesettingTools/DependencyControl
-Source0:        https://github.com/TypesettingTools/DependencyControl/archive/v%{version_no_tilde}.tar.gz
-Source1:        https://github.com/TypesettingTools/ffi-experiments/archive/%{ffiexpver}.tar.gz
-Source2:        https://github.com/harningt/luajson/archive/%{luajsonver}.tar.gz
+Source0:        https://github.com/TypesettingTools/DependencyControl/archive/%{commit}.tar.gz
 
-BuildRequires:  g++ meson lua-moonscript libcurl-devel
+# this also disables debug packages
+BuildArch:      noarch
+
 Requires:       aegisub
+# requires unversioned SO at runtime
+Requires:       libcurl-devel
+# /modules/l0/DependencyControl/hash.moon#L114
+Requires:       libcrypto.so.3
+
 
 %description
 Package manager for scripts for the Aegisub subtitle editor
 
+
 %prep
-%autosetup -n DependencyControl-%{version_no_tilde}
-
-
-# unpack ffi-experiments
-mkdir -p %{_builddir}/SOURCES/ffi-experiments
-tar -x --gzip -f %{SOURCE1} -C %{_builddir}/SOURCES/ffi-experiments --strip-components=1
-
-# unpack luajson
-mkdir -p %{_builddir}/SOURCES/luajson
-tar -x --gzip -f %{SOURCE2} -C %{_builddir}/SOURCES/luajson --strip-components=1
+%autosetup -n DependencyControl-%{commit}
 
 
 %build
-cd %{_builddir}/SOURCES/ffi-experiments
-meson build
-meson compile -C build
 
 
 %install
 %define aegiauto %{buildroot}%{_datadir}/aegisub/automation
-mkdir -p "%{aegiauto}/include/l0"
 
-cp -r modules/* "%{aegiauto}/include/l0"
-install -D -m 644 macros/* -t "%{aegiauto}/autoload"
+# TODO: this should use install, but:
+#   install throws an error and fails the build
+#   install: omitting directory 'macros/l0.DependencyControl.Toolbox'
 
-# ffiexp
-cd "%{_builddir}/SOURCES/ffi-experiments"
-install -D -m644 build/bad-mutex/BadMutex.lua                 "%{aegiauto}/include/BM/BadMutex.lua"
-install -D -m644 build/bad-mutex/libBadMutex.so               "%{aegiauto}/include/BM/BadMutex/libBadMutex.so"
-install -D -m644 build/download-manager/DownloadManager.lua   "%{aegiauto}/include/DM/DownloadManager.lua"
-install -D -m644 build/download-manager/libDownloadManager.so "%{aegiauto}/include/DM/DownloadManager/libDownloadManager.so"
-install -D -m644 build/precise-timer/PreciseTimer.lua         "%{aegiauto}/include/PT/PreciseTimer.lua"
-install -D -m644 build/precise-timer/libPreciseTimer.so       "%{aegiauto}/include/PT/PreciseTimer/libPreciseTimer.so"
-install -D -m644 build/requireffi/requireffi.lua              "%{aegiauto}/include/requireffi/requireffi.lua"
+# install -m 644 modules/* "%{aegiauto}/include/l0"
+mkdir -p "%{aegiauto}/include/"
+cp -r modules/* "%{aegiauto}/include/"
+chmod -x,u=rwX,g=rX,o=rX -R "%{aegiauto}/include/"
 
-install -D -m644 LICENSE "%{buildroot}%{_datadir}/licenses/%{name}/LICENSE_ffi-experiments"
+# install -D -m 644 macros/* -t "%{aegiauto}/autoload"
+mkdir -p "%{aegiauto}/autoload"
+cp -r macros/* "%{aegiauto}/autoload"
+chmod -x,u=rwX,g=rX,o=rX -R "%{aegiauto}/autoload"
 
-# luajson
-cd "%{_builddir}/SOURCES/luajson"
-install -m 644 lua/json.lua "%{aegiauto}/include"
-cp -r lua/json "%{aegiauto}/include"
-
-install -D -m644 LICENSE "%{buildroot}%{_datadir}/licenses/%{name}/LICENSE_luajson"
 
 %files
 %license LICENSE
-%license %{_datadir}/licenses/%{name}/LICENSE_ffi-experiments
-%license %{_datadir}/licenses/%{name}/LICENSE_luajson
 %doc README.md
+%doc STYLE.md
 %{_datadir}/aegisub/automation/include/*
 %{_datadir}/aegisub/automation/autoload/*
 
 
 %changelog
+* Wed Jul 22 2026 Tarulia <mihawk.90+git@googlemail.com> - 0.6.4^20260722.fd41832-1
+- drop now-unused ISC license
+- remove `ffi-experiments` and `luajson` per upstream requirements
+- change package to `noarch` as it doesn't contain any binaries
+- move `libcurl-devel` to `Require` because it's a runtime dependency
+- remove `lua-moonscript` dependency required for `ffi-exp` build
+- change `%autosetup` path for commit-tarball
+- WIP: use `cp -r` for macros and modules, should ideally use `install`
+- add `STYLE.md` as `%doc`
+
 * Fri Jun 27 2025 Tarulia <mihawk.90+git@googlemail.com> - 0.6.4~alpha-2
 - Use wildcards to disown automation directory
 
