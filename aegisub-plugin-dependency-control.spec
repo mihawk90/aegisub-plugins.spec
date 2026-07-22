@@ -6,7 +6,7 @@
 
 Name:           aegisub-plugin-dependency-control-pre
 Version:        0.6.4^%{date}.%(c=%{commit}; echo ${c:0:7})
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Aegisub Script Manager
 # vendored dkjson.lua also under MIT, see file header
 #     modules/l0/dkjson/vendor/dkjson.lua
@@ -16,6 +16,8 @@ Source0:        https://github.com/TypesettingTools/DependencyControl/archive/%{
 
 # this also disables debug packages
 BuildArch:      noarch
+# copied from aegisub.spec; not required on COPR, but whatever
+ExcludeArch: ppc64le s390x
 
 Requires:       aegisub
 # requires unversioned SO at runtime
@@ -62,7 +64,10 @@ chmod -x,u=rwX,g=rX,o=rX -R "%{aegiauto}/autoload"
 
 
 %changelog
-* Wed Jul 22 2026 Tarulia <mihawk.90+git@googlemail.com> - 0.6.4^20260722.2.f116ef3-4
+* Wed Jul 22 2026 Tarulia <mihawk.90+git@googlemail.com> - 0.6.4^20260722.2.f116ef3-2
+- Add ExcludeArch
+
+* Wed Jul 22 2026 Tarulia <mihawk.90+git@googlemail.com> - 0.6.4^20260722.2.f116ef3-1
 - New version
 
 * Wed Jul 22 2026 Tarulia <mihawk.90+git@googlemail.com> - 0.6.4^20260722.fd41832-3
