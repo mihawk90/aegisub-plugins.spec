@@ -1,83 +1,88 @@
-# spec file adapted from AUR PKGBUILD
-# https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=aegisub-dependency-control
-
-# disable this because honestly I can't be bothered
-%global debug_package %{nil} 
-
-%global ffiexpver b8897ead55b84ec4148e900882bff8336b38f939
-%global luajsonver 1.3.3
-
 Name:           aegisub-plugin-dependency-control
-Version:        0.6.4~alpha
-Release:        2%{?dist}
-Summary:        Aegisub Script Manager
-License:        'MIT' 'ISC'
+Version:        0.7.0
+Release:        1%{?dist}
+Summary:        Enterprise Aegisub Script Management
+# vendored dkjson.lua also under MIT, see file header
+#     modules/l0/dkjson/vendor/dkjson.lua
+License:        MIT
 URL:            https://github.com/TypesettingTools/DependencyControl
-Source0:        https://github.com/TypesettingTools/DependencyControl/archive/v%{version_no_tilde}.tar.gz
-Source1:        https://github.com/TypesettingTools/ffi-experiments/archive/%{ffiexpver}.tar.gz
-Source2:        https://github.com/harningt/luajson/archive/%{luajsonver}.tar.gz
+Source0:        %{url}/archive/v%{version}.tar.gz
 
-BuildRequires:  g++ meson lua-moonscript libcurl-devel
+# this also disables debug packages
+BuildArch:      noarch
+# copied from aegisub.spec; not required on COPR, but whatever
+ExcludeArch: ppc64le s390x
+
 Requires:       aegisub
+# modules/l0/DependencyControl/Downloader.moon:208
+Requires:       libcurl
+# modules/l0/DependencyControl/hash.moon:114
+Requires:       openssl-libs
+
 
 %description
-Package manager for scripts for the Aegisub subtitle editor
+DependencyControl provides versioning, automatic script update, dependency
+management and script management services to Aegisub macros and modules.
+
 
 %prep
-%autosetup -n DependencyControl-%{version_no_tilde}
-
-
-# unpack ffi-experiments
-mkdir -p %{_builddir}/SOURCES/ffi-experiments
-tar -x --gzip -f %{SOURCE1} -C %{_builddir}/SOURCES/ffi-experiments --strip-components=1
-
-# unpack luajson
-mkdir -p %{_builddir}/SOURCES/luajson
-tar -x --gzip -f %{SOURCE2} -C %{_builddir}/SOURCES/luajson --strip-components=1
+%autosetup -n DependencyControl-%{version}
 
 
 %build
-cd %{_builddir}/SOURCES/ffi-experiments
-meson build
-meson compile -C build
+# nothing to build
 
 
 %install
 %define aegiauto %{buildroot}%{_datadir}/aegisub/automation
-mkdir -p "%{aegiauto}/include/l0"
 
-cp -r modules/* "%{aegiauto}/include/l0"
-install -D -m 644 macros/* -t "%{aegiauto}/autoload"
+# TODO: this should use install, but:
+#   install throws an error and fails the build
+#   install: omitting directory 'macros/l0.DependencyControl.Toolbox'
 
-# ffiexp
-cd "%{_builddir}/SOURCES/ffi-experiments"
-install -D -m644 build/bad-mutex/BadMutex.lua                 "%{aegiauto}/include/BM/BadMutex.lua"
-install -D -m644 build/bad-mutex/libBadMutex.so               "%{aegiauto}/include/BM/BadMutex/libBadMutex.so"
-install -D -m644 build/download-manager/DownloadManager.lua   "%{aegiauto}/include/DM/DownloadManager.lua"
-install -D -m644 build/download-manager/libDownloadManager.so "%{aegiauto}/include/DM/DownloadManager/libDownloadManager.so"
-install -D -m644 build/precise-timer/PreciseTimer.lua         "%{aegiauto}/include/PT/PreciseTimer.lua"
-install -D -m644 build/precise-timer/libPreciseTimer.so       "%{aegiauto}/include/PT/PreciseTimer/libPreciseTimer.so"
-install -D -m644 build/requireffi/requireffi.lua              "%{aegiauto}/include/requireffi/requireffi.lua"
+# TODO: Once we have releases, copy everything as is
+#   Upstream packages the tarballs in the correct structure,
+#   so we don't need to do any sorting ourselves
 
-install -D -m644 LICENSE "%{buildroot}%{_datadir}/licenses/%{name}/LICENSE_ffi-experiments"
+# mkdir -p "%{aegiauto}"
+# cp -r . "%{aegiauto}"
+# chmod -x,u=rwX,g=rX,o=rX -R "%{aegiauto}"
 
-# luajson
-cd "%{_builddir}/SOURCES/luajson"
-install -m 644 lua/json.lua "%{aegiauto}/include"
-cp -r lua/json "%{aegiauto}/include"
+# install -m 644 modules/* "%{aegiauto}/include/l0"
+mkdir -p "%{aegiauto}/include/"
+cp -r modules/* "%{aegiauto}/include/"
+chmod -x,u=rwX,g=rX,o=rX -R "%{aegiauto}/include/"
 
-install -D -m644 LICENSE "%{buildroot}%{_datadir}/licenses/%{name}/LICENSE_luajson"
+# install -D -m 644 macros/* -t "%{aegiauto}/autoload"
+mkdir -p "%{aegiauto}/autoload"
+cp -r macros/* "%{aegiauto}/autoload"
+chmod -x,u=rwX,g=rX,o=rX -R "%{aegiauto}/autoload"
+
+
+%check
+# TODO: Release tarballs contain tests, so let's run them if we can
+
 
 %files
 %license LICENSE
-%license %{_datadir}/licenses/%{name}/LICENSE_ffi-experiments
-%license %{_datadir}/licenses/%{name}/LICENSE_luajson
 %doc README.md
+%doc STYLE.md
 %{_datadir}/aegisub/automation/include/*
 %{_datadir}/aegisub/automation/autoload/*
 
 
 %changelog
+* Fri Jul 24 2026 Tarulia <mihawk.90+git@googlemail.com> - 0.7.0-1
+- new version
+- remove `ffi-experiments` and `luajson` per upstream requirements
+- remove `lua-moonscript` BuildReq for `ffi-exp` build
+- drop now-unused ISC license
+- add `openssl-libs` and `libcurl` as `Requires`
+- update Summary and Description
+- change package to `noarch` as it doesn't contain any binaries
+- add ExcludeArch
+- add `STYLE.md` as `%doc`
+
 * Fri Jun 27 2025 Tarulia <mihawk.90+git@googlemail.com> - 0.6.4~alpha-2
 - Use wildcards to disown automation directory
 
