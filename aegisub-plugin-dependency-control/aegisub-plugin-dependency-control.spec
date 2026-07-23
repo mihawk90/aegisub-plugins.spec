@@ -6,7 +6,7 @@
 
 Name:           aegisub-plugin-dependency-control-pre
 Version:        0.6.4^%{date}.%(c=%{commit}; echo ${c:0:7})
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Aegisub Script Manager
 # vendored dkjson.lua also under MIT, see file header
 #     modules/l0/dkjson/vendor/dkjson.lua
@@ -76,6 +76,9 @@ chmod -x,u=rwX,g=rX,o=rX -R "%{aegiauto}/autoload"
 
 
 %changelog
+* Thu Jul 23 2026 Tarulia <mihawk.90+git@googlemail.com> - 0.6.4^20260723.1.619842f-2
+- rebuilt
+
 * Thu Jul 23 2026 Tarulia <mihawk.90+git@googlemail.com> - 0.6.4^20260723.1.619842f-1
 - New version
 
