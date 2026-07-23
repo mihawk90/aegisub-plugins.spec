@@ -10,9 +10,9 @@ Release:        1%{?dist}
 Summary:        Aegisub Script Manager
 # vendored dkjson.lua also under MIT, see file header
 #     modules/l0/dkjson/vendor/dkjson.lua
-License:        'MIT'
+License:        MIT
 URL:            https://github.com/TypesettingTools/DependencyControl
-Source0:        https://github.com/TypesettingTools/DependencyControl/archive/%{commit}.tar.gz
+Source0:        %{url}/archive/%{commit}.tar.gz
 
 # this also disables debug packages
 BuildArch:      noarch
@@ -20,7 +20,6 @@ BuildArch:      noarch
 ExcludeArch: ppc64le s390x
 
 Requires:       aegisub
-# requires unversioned SO at runtime
 Requires:       libcurl
 # modules/l0/DependencyControl/hash.moon#L114
 Requires:       libcrypto.so.3
@@ -35,6 +34,7 @@ Package manager for scripts for the Aegisub subtitle editor
 
 
 %build
+# nothing to build
 
 
 %install
