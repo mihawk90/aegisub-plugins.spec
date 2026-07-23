@@ -1,12 +1,12 @@
 # spec file adapted from AUR PKGBUILD
 # https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=aegisub-dependency-control
 
-%global date   20260722.2
-%global commit f116ef3ad253b610d02c670b977bae8c30589756
+%global date   20260723.1
+%global commit 619842f5e989bb7482d5172da835f6ffd2988a4e
 
 Name:           aegisub-plugin-dependency-control-pre
 Version:        0.6.4^%{date}.%(c=%{commit}; echo ${c:0:7})
-Release:        2%{?dist}
+Release:        1%{?dist}
 Summary:        Aegisub Script Manager
 # vendored dkjson.lua also under MIT, see file header
 #     modules/l0/dkjson/vendor/dkjson.lua
@@ -44,6 +44,14 @@ Package manager for scripts for the Aegisub subtitle editor
 #   install throws an error and fails the build
 #   install: omitting directory 'macros/l0.DependencyControl.Toolbox'
 
+# TODO: Once we have releases, copy everything as is
+#   Upstream packages the tarballs in the correct structure,
+#   so we don't need to do any sorting ourselves
+
+# mkdir -p "%{aegiauto}"
+# cp -r . "%{aegiauto}"
+# chmod -x,u=rwX,g=rX,o=rX -R "%{aegiauto}"
+
 # install -m 644 modules/* "%{aegiauto}/include/l0"
 mkdir -p "%{aegiauto}/include/"
 cp -r modules/* "%{aegiauto}/include/"
@@ -55,6 +63,10 @@ cp -r macros/* "%{aegiauto}/autoload"
 chmod -x,u=rwX,g=rX,o=rX -R "%{aegiauto}/autoload"
 
 
+%check
+# TODO: Release tarballs contain tests, so let's run them if we can
+
+
 %files
 %license LICENSE
 %doc README.md
@@ -64,6 +76,9 @@ chmod -x,u=rwX,g=rX,o=rX -R "%{aegiauto}/autoload"
 
 
 %changelog
+* Thu Jul 23 2026 Tarulia <mihawk.90+git@googlemail.com> - 0.6.4^20260723.1.619842f-1
+- New version
+
 * Wed Jul 22 2026 Tarulia <mihawk.90+git@googlemail.com> - 0.6.4^20260722.2.f116ef3-2
 - Add ExcludeArch
 
