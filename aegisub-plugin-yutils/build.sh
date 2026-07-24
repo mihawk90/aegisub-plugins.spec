@@ -2,7 +2,7 @@
 
 ### preparation
 
-spec=./aegisub-plugin-yutils.spec
+spec=$(echo *.spec)
 frel=$(rpm -E %fedora)
 
 if [ "$1" == "all" ]; then

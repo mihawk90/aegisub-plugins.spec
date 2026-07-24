@@ -2,7 +2,7 @@
 
 ### preparation
 
-spec=./aegisub-plugin-dependency-control.spec
+spec=$(echo *.spec)
 frel=$(rpm -E %fedora)
 
 if [ "$1" == "all" ]; then
@@ -35,7 +35,7 @@ pushd ./f_upload/$frel && \
 #sha512sum aegisub-plugin-dependency-control-$mver-$rver.fc$frel.x86_64.rpm > aegisub-plugin-dependency-control-$mver-$rver.fc$frel.sha512 && \
 \
 if [ "$1" == "install" ]; then
-	sudo dnf install aegisub-plugin-dependency-control-$mver-$rver.fc$frel.x86_64.rpm
+	sudo dnf install ./$(rpmspec -q ../../$spec).rpm
 fi
 
 popd
