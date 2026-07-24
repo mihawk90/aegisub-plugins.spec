@@ -1,8 +1,9 @@
 # What?
 
-A Spec file for building an RPM package of [Aegisub DependencyControl](https://github.com/TypesettingTools/DependencyControl), a script manager for [Aegisub](https://aegisub.org).
+RPM Spec files for building Aegisub plugin packages:
 
-This is largely adapted from the [AUR PKGBUILD](https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=aegisub-dependency-control).
+- [Aegisub DependencyControl](https://github.com/TypesettingTools/DependencyControl), a script manager for [Aegisub](https://aegisub.org).
+- [Yutils](https://github.com/TypesettingTools/Yutils), a utilities library that isn't in DependencyControl
 
 # Why?
 
