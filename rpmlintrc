@@ -1,2 +1,5 @@
 # rpmbuild can't figure out libs loaded by ffi
 setBadness('explicit-lib-dependency', 0)
+
+# Yutils depends on unversioned pango and libpng
+setBadness('devel-dependency', 0)

@@ -3,7 +3,7 @@
 
 Name:           aegisub-plugin-yutils
 Version:        0^%{date}.%(c=%{commit}; echo ${c:0:7})
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        An ASS typeset utilities library for Aegisub
 License:        MIT
 URL:            https://github.com/TypesettingTools/Yutils
@@ -26,7 +26,7 @@ Recommends:     libpng-devel
 
 %description
 Yutils is a Lua library with functions for media decoding, shape manipulation,
-advanced math, utf-8 coded texts, ASS (Advanced Substation Alpha) script parsing
+advanced math, UTF-8 coded texts, ASS (Advanced Substation Alpha) script parsing
 and with some other small helpers.
 
 
@@ -53,6 +53,9 @@ install -D -m 644 src/Yutils.lua -t "%{buildroot}%{_datadir}/aegisub/automation/
 
 
 %changelog
+* Sat Jul 25 2026 Tarulia <mihawk.90+git@googlemail.com> - 0^20230725.91a4ac7-2
+- Fix rpmlint warning
+
 * Thu Jul 23 2026 Tarulia <mihawk.90+git@googlemail.com> - 0^20230725.91a4ac7-1
 - Initial packaging
 
