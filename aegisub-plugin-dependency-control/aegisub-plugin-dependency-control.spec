@@ -1,17 +1,25 @@
+%global srcname DependencyControl
+
 Name:           aegisub-plugin-dependency-control
-Version:        0.7.0
+Version:        0.8.1
 Release:        1%{?dist}
 Summary:        Enterprise Aegisub Script Management
 # vendored dkjson.lua also under MIT, see file header
 #     modules/l0/dkjson/vendor/dkjson.lua
 License:        MIT
 URL:            https://github.com/TypesettingTools/DependencyControl
-Source0:        %{url}/archive/v%{version}.tar.gz
+Source0:        %{url}/releases/download/v%{version}/%{srcname}-v%{version}.zip
+
+# Not included in zip (for now?)
+%global rawurl %(u=%{url}; echo ${u/github/raw.githubusercontent})
+Source100:      %{rawurl}/refs/tags/v%{version}/LICENSE
+Source101:      %{rawurl}/refs/tags/v%{version}/README.md
+Source102:      %{rawurl}/refs/tags/v%{version}/STYLE.md
 
 # this also disables debug packages
 BuildArch:      noarch
 # copied from aegisub.spec; not required on COPR, but whatever
-ExcludeArch: ppc64le s390x
+ExcludeArch:    ppc64le s390x
 
 Requires:       aegisub
 # modules/l0/DependencyControl/Downloader.moon:208
@@ -26,7 +34,9 @@ management and script management services to Aegisub macros and modules.
 
 
 %prep
-%autosetup -n DependencyControl-%{version}
+%autosetup -n "automation"
+# copy to sourcedir so we can reference them by filename in %files
+cp %{SOURCE100} %{SOURCE101} %{SOURCE102} .
 
 
 %build
@@ -38,25 +48,14 @@ management and script management services to Aegisub macros and modules.
 
 # TODO: this should use install, but:
 #   install throws an error and fails the build
-#   install: omitting directory 'macros/l0.DependencyControl.Toolbox'
+# install -m 644 -D * -t "%{aegiauto}"
+#   install: omitting directory 'autoload'
+#   install: omitting directory 'include'
+#   install: omitting directory 'tests'
 
-# TODO: Once we have releases, copy everything as is
-#   Upstream packages the tarballs in the correct structure,
-#   so we don't need to do any sorting ourselves
-
-# mkdir -p "%{aegiauto}"
-# cp -r . "%{aegiauto}"
-# chmod -x,u=rwX,g=rX,o=rX -R "%{aegiauto}"
-
-# install -m 644 modules/* "%{aegiauto}/include/l0"
-mkdir -p "%{aegiauto}/include/"
-cp -r modules/* "%{aegiauto}/include/"
-chmod -x,u=rwX,g=rX,o=rX -R "%{aegiauto}/include/"
-
-# install -D -m 644 macros/* -t "%{aegiauto}/autoload"
-mkdir -p "%{aegiauto}/autoload"
-cp -r macros/* "%{aegiauto}/autoload"
-chmod -x,u=rwX,g=rX,o=rX -R "%{aegiauto}/autoload"
+mkdir -p "%{aegiauto}"
+cp -r . "%{aegiauto}"
+chmod -x,u=rwX,g=rX,o=rX -R "%{aegiauto}"
 
 
 %check
@@ -67,11 +66,15 @@ chmod -x,u=rwX,g=rX,o=rX -R "%{aegiauto}/autoload"
 %license LICENSE
 %doc README.md
 %doc STYLE.md
-%{_datadir}/aegisub/automation/include/*
-%{_datadir}/aegisub/automation/autoload/*
+%{_datadir}/aegisub/automation/*
 
 
 %changelog
+* Sat Jul 25 2026 Tarulia <mihawk.90+git@googlemail.com> - 0.8.1-1
+- new version
+- use upstream release archive
+  - add LICENSE, README, and STYLE not included in archive
+
 * Fri Jul 24 2026 Tarulia <mihawk.90+git@googlemail.com> - 0.7.0-1
 - new version
 - remove `ffi-experiments` and `luajson` per upstream requirements
