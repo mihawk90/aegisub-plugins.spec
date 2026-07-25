@@ -6,3 +6,4 @@
 !.gitignore
 !*.spec
 !build.sh
+!rpmlintrc

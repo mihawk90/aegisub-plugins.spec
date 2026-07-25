@@ -1,0 +1,2 @@
+# rpmbuild can't figure out libs loaded by ffi
+setBadness('explicit-lib-dependency', 0)
