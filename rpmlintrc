@@ -3,3 +3,9 @@ setBadness('explicit-lib-dependency', 0)
 
 # Yutils depends on unversioned pango and libpng
 setBadness('devel-dependency', 0)
+
+# SubInspector hardcodes a relative path in L76
+setBadness('arch-dependent-file-in-usr-share', 0)
+
+# this finds a bunch of bogus
+setBadness('spelling-error', 0)
