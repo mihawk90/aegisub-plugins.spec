@@ -44,7 +44,7 @@ cp %{SOURCE100} %{SOURCE101} %{SOURCE102} .
 
 
 %install
-%define aegiauto %{buildroot}%{_datadir}/aegisub/automation
+%global aegiauto %{buildroot}%{_datadir}/aegisub/automation
 
 # TODO: this should use install, but:
 #   install throws an error and fails the build
@@ -60,6 +60,9 @@ chmod -x,u=rwX,g=rX,o=rX -R "%{aegiauto}"
 
 %check
 # TODO: Release tarballs contain tests, so let's run them if we can
+# https://discord.com/channels/541372419286499372/541382429898702880/1530538872906190908
+# > The tests can be run using the depctrl.lua CLI, it's what the test CI workflow does.
+# > I can also include the CLI in the bundle, but you'll need a bunch of rocks to successfully run the tests
 
 
 %files

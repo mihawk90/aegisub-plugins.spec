@@ -12,7 +12,7 @@ Source0:        %{url}/archive/%{commit}.tar.gz
 # this also disables debug packages
 BuildArch:      noarch
 # copied from aegisub.spec; not required on COPR, but whatever
-ExcludeArch: ppc64le s390x
+ExcludeArch:    ppc64le s390x
 
 Requires:       aegisub
 # ffi prefixes "lib" and suffixes ".so" automatically
@@ -47,6 +47,7 @@ install -D -m 644 src/Yutils.lua -t "%{buildroot}%{_datadir}/aegisub/automation/
 
 
 %files
+# license is in fileheader
 %doc README.md
 %doc docs/*
 %{_datadir}/aegisub/automation/include/*
