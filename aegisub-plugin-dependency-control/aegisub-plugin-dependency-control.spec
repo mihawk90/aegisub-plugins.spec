@@ -2,7 +2,7 @@
 
 Name:           aegisub-plugin-dependency-control
 Version:        0.8.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Enterprise Aegisub Script Management
 # vendored dkjson.lua also under MIT, see file header
 #     modules/l0/dkjson/vendor/dkjson.lua
@@ -54,7 +54,7 @@ cp %{SOURCE100} %{SOURCE101} %{SOURCE102} .
 #   install: omitting directory 'tests'
 
 mkdir -p "%{aegiauto}"
-cp -r */* "%{aegiauto}"
+cp -r */ "%{aegiauto}"
 chmod -x,u=rwX,g=rX,o=rX -R "%{aegiauto}"
 
 
@@ -73,8 +73,11 @@ chmod -x,u=rwX,g=rX,o=rX -R "%{aegiauto}"
 
 
 %changelog
+* Sat Aug 01 2026 Tarulia <mihawk.90+git@googlemail.com> - 0.8.1-3
+- Fix incorrect copy resulting in load failure
+
 * Sat Jul 25 2026 Tarulia <mihawk.90+git@googlemail.com> - 0.8.1-2
-- DepCtrl: Fix rpmlint `files-duplicate` warning
+- Fix rpmlint `files-duplicate` warning
 
 * Sat Jul 25 2026 Tarulia <mihawk.90+git@googlemail.com> - 0.8.1-1
 - new version
