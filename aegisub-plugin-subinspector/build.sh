@@ -26,7 +26,7 @@ rver=$(cat $spec | grep Release\: | cut -d" " -f9 | sed -e 's/%{?dist}//')
 
 set -x
 ### build phase
-rm ./f_downloads/*.tar.gz
+rm ./f_downloads/*
 spectool -g $spec --directory ./f_downloads
 rm -rf ./f_upload/$frel/
 mock -r fedora+rpmfusion_nonfree-$frel-x86_64 --sources=./f_downloads --spec=$spec --resultdir=./f_upload/$frel/ --rootdir=$(pwd)/../mock_root
