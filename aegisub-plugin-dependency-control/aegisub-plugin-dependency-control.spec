@@ -1,7 +1,7 @@
 %global srcname DependencyControl
 
 Name:           aegisub-plugin-dependency-control
-Version:        0.9.0
+Version:        0.9.1
 Release:        1%{?dist}
 Summary:        Enterprise Aegisub Script Management
 # vendored dkjson.lua also under MIT, see file header
@@ -76,6 +76,9 @@ chmod -x,u=rwX,g=rX,o=rX -R "%{aegiauto}"
 
 
 %changelog
+* Wed Oct 14 2026 Tarulia <mihawk.90+git@googlemail.com> - 0.9.1-1
+- new version
+
 * Fri Aug 21 2026 Tarulia <mihawk.90+git@googlemail.com> - 0.9.0-1
 - new version
 
