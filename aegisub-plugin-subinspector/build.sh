@@ -20,6 +20,10 @@ else
 	echo ">>>>>>> Fedora ${frel} starting - defaulted."
 fi;
 
+if [ "$1" == "debug" ]; then
+	noclean='--no-cleanup-after'
+fi;
+
 # delimited by spaces, every space is a new "field" for cut, hence field 9 for the version/release
 mver=$(cat $spec | grep Version\: | cut -d" " -f9)
 rver=$(cat $spec | grep Release\: | cut -d" " -f9 | sed -e 's/%{?dist}//')
@@ -29,7 +33,7 @@ set -x
 rm ./f_downloads/*
 spectool -g $spec --directory ./f_downloads
 rm -rf ./f_upload/$frel/
-mock -r fedora+rpmfusion_nonfree-$frel-x86_64 --sources=./f_downloads --spec=$spec --resultdir=./f_upload/$frel/ --rootdir=$(pwd)/../mock_root
+mock -r fedora+rpmfusion_nonfree-$frel-x86_64 --sources=./f_downloads --spec=$spec --resultdir=./f_upload/$frel/ --rootdir=$(pwd)/../mock_root $noclean
 
 pushd ./f_upload/$frel
 #sha512sum aegisub-plugin-dependency-control-$mver-$rver.fc$frel.x86_64.rpm > aegisub-plugin-dependency-control-$mver-$rver.fc$frel.sha512 && \

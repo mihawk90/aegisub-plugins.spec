@@ -6,7 +6,7 @@
 
 Name:           aegisub-plugin-subinspector
 Version:        0.6.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Low-level subtitle inspection library
 # libSubInspector = MIT
 # Inspector.moon  = CC0 = CC0-1.0
@@ -40,6 +40,14 @@ to parse and rasterize the subtitles.
 %prep
 %autosetup -n SubInspector-%{version}
 tar -x --xz -f %{SOURCE1} -C subprojects
+# TODO: This doesn't work for some reason?
+# Log says it's applying, but file doesn't change
+# meson subprojects packagefiles --apply
+# do it manually instead
+pushd subprojects/libass-%{libass}
+echo 'applying patch ../packagefiles/libass/0001-exact-rasterizer-scale.patch'
+patch -p1 < ../packagefiles/libass/0001-exact-rasterizer-scale.patch
+popd
 meson setup build
 
 
@@ -67,6 +75,9 @@ install -D -m644 build/src/libSubInspector.so    "%{aegiauto}/include/SubInspect
 
 
 %changelog
+* Sun Oct 18 2026 Tarulia <mihawk.90+git@googlemail.com> - 0.6.0-2
+- Apply libass patch manually
+
 * Mon Sep 14 2026 Tarulia <mihawk.90+git@googlemail.com> - 0.6.0-1
 - new version
 - update License field (previously missed CC0)
